@@ -3,6 +3,7 @@
 // le vrai backend sera branché ici plus tard, sans changer les composants.
 import { mockLogin, mockUserActivity, mockUserInfo } from "../mocks/mockApi";
 import type { LoginResponse, Session, UserInfo } from "../types";
+import { formatUser, toApiDate } from "../utils/format";
 
 // Erreur renvoyée par l'API, avec son code HTTP
 export class ApiError extends Error {
@@ -35,4 +36,12 @@ export async function getUserInfo(token: string): Promise<UserInfo> {
 // GET /api/user-activity : séances entre deux dates ("YYYY-MM-DD")
 export async function getUserActivity(token: string, startWeek: string, endWeek: string): Promise<Session[]> {
   return fromMock(mockUserActivity(token, startWeek, endWeek));
+}
+
+// Profil + statistiques de l'utilisateur connecté, mis en forme pour l'affichage
+// (statistiques calculées à partir de toutes ses séances depuis l'inscription)
+export async function getUserData(token: string) {
+  const info = await getUserInfo(token);
+  const sessions = await getUserActivity(token, info.profile.createdAt, toApiDate(new Date()));
+  return formatUser(info, sessions);
 }

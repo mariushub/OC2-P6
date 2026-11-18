@@ -1,5 +1,6 @@
-// Fausses réponses de l'API (même structure que le backend), pour développer sans le backend
+// Fausses réponses de l'API, utilisées avec "npm run dev:mock" (pas besoin du backend)
 import type { LoginResponse, Session, UserInfo } from "../types";
+import { toApiDate } from "../utils/format";
 import userActivityData from "./user-activity.json";
 import userInfoData from "./user-info.json";
 
@@ -32,7 +33,6 @@ export function mockUserInfo(token: string): UserInfo | null {
 export function mockUserActivity(token: string, startWeek: string, endWeek: string): Session[] | null {
   const sessions = usersActivity[userIdFromToken(token)];
   if (!sessions) return null;
-  const now = new Date();
-  const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
+  const today = toApiDate(new Date());
   return sessions.filter((s) => s.date >= startWeek && s.date <= endWeek && s.date <= today);
 }

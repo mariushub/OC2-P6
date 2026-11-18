@@ -32,3 +32,38 @@ export type Session = {
   heartRate: { min: number; max: number; average: number };
   caloriesBurned: number;
 };
+
+// ----- Données mises en forme pour l'affichage (voir utils/format.ts) -----
+
+// Utilisateur connecté, partagé par le UserContext
+export type User = {
+  firstName: string;
+  lastName: string;
+  profilePicture: string;
+  age: number;
+  height: number; // cm
+  weight: number; // kg
+  memberSince: Date;
+  stats: {
+    totalDistance: number; // km
+    totalDuration: number; // minutes
+    totalCalories: number;
+    totalSessions: number;
+    restDays: number;
+  };
+};
+
+// Une barre du graphique "km par semaine"
+export type WeekDistance = {
+  label: string; // "S1"
+  range: string; // "01.06 au 07.06" (info-bulle)
+  km: number;
+};
+
+// Un jour du graphique "fréquence cardiaque" (null = pas de séance ce jour-là)
+export type DayHeartRate = {
+  day: string; // "Lun"
+  min: number | null;
+  max: number | null;
+  average: number | null;
+};
